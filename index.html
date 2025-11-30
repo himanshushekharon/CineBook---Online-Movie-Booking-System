@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FastShow - Book movie tickets online for cinemas in your city. Browse movies, select theaters, choose seats, and make instant payments.">
+    <meta name="keywords" content="movie tickets, cinema booking, online tickets, movies, theaters">
+    <meta name="author" content="FastShow">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="FastShow - Movie Tickets Online Booking">
+    <meta property="og:description" content="Book movie tickets online easily and safely">
+    <meta property="og:type" content="website">
+    
+    <!-- Title -->
+    <title>FastShow - Movie Tickets Online Booking</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF1744'><rect x='2' y='3' width='20' height='14' rx='2'/><line x1='8' y1='21' x2='16' y2='21'/><line x1='12' y1='17' x2='12' y2='21'/></svg>">
+</head>
+<body>
+
+    <!-- Sign In Modal -->
+    <div id="signin-modal" class="modal" role="dialog" aria-labelledby="signin-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="signin-title">Sign In to FastShow</h2>
+                <button class="close-btn" onclick="closeSignInModal()" title="Close sign in modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="signin-form" class="signin-form">
+                    <div class="form-group">
+                        <label for="signin-email">Email or Mobile Number</label>
+                        <input type="text" id="signin-email" placeholder="Enter your email or mobile number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signin-password">Password</label>
+                        <input type="password" id="signin-password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="signin-btn-modal">Sign In</button>
+                </form>
+                <div class="signin-footer">
+                    <p>Don't have an account? <a href="#" onclick="showSignUpForm()">Sign Up</a></p>
+                    <p><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Selection Modal -->
+    <div id="location-modal" class="modal" role="dialog" aria-labelledby="location-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="location-title">Select Your City</h2>
+                <button class="close-btn" onclick="closeLocationModal()" title="Close location modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="location-search">
+                    <input type="text" id="location-search" placeholder="Search for your city">
+                </div>
+                <div class="popular-cities">
+                    <h3>Popular Cities</h3>
+                    <div class="cities-grid">
+                        <button class="city-btn" onclick="selectCity('Mumbai')">Mumbai</button>
+                        <button class="city-btn" onclick="selectCity('Delhi')">Delhi</button>
+                        <button class="city-btn" onclick="selectCity('Bangalore')">Bangalore</button>
+                        <button class="city-btn" onclick="selectCity('Hyderabad')">Hyderabad</button>
+                        <button class="city-btn" onclick="selectCity('Chennai')">Chennai</button>
+                        <button class="city-btn" onclick="selectCity('Pune')">Pune</button>
+                        <button class="city-btn" onclick="selectCity('Kolkata')">Kolkata</button>
+                        <button class="city-btn" onclick="selectCity('Ahmedabad')">Ahmedabad</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="nav-left">
+                <!-- Logo -->
+                <a href="#" class="logo" title="FastShow Home">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <span class="logo-text">FastShow</span>
+                </a>
+                
+                <!-- Search Bar -->
+                <div class="search-bar" role="search">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" placeholder="Search for Movies, Events, Plays, Sports and Activities" aria-label="Search movies and events">
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <!-- Location Selector -->
+                <button class="location" onclick="openLocationModal()" title="Change city" aria-label="Change city">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span id="current-city">Mumbai</span>
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="6,9 12,15 18,9"/>
+                    </svg>
+                </button>
+                
+                <!-- Sign In Button -->
+                <button class="sign-in-btn" onclick="openSignInModal()" id="signin-button" aria-label="Sign in to your account">Sign in</button>
+                
+                <!-- User Menu (Hidden by default) -->
+                <div class="user-menu" id="user-menu">
+                    <div class="user-avatar" aria-label="User profile">
+                        <span id="user-initial">U</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-info">
+                            <span id="user-name">User</span>
+                            <span id="user-email">user@example.com</span>
+                        </div>
+                        <button onclick="signOut()" aria-label="Sign out from your account">Sign Out</button>
+                    </div>
+                </div>
+                
+                <!-- Menu Icon (Mobile) -->
+                <button class="menu-icon" title="Menu" aria-label="Open menu" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Movie Listing Screen -->
+    <section id="movie-screen" class="screen active">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="banner-content">
+                <h1>Movies in <span id="banner-city">Mumbai</span></h1>
+                <div class="filter-tabs" role="tablist" aria-label="Movie language filters">
+                    <button class="filter-tab active" role="tab" aria-selected="true" tabindex="0">All</button>
+                    <button class="filter-tab" role="tab" aria-selected="false" tabindex="-1">English</button>
+                    <button class="filter-tab" role="tab" aria-selected="false" tabindex="-1">Hindi</button>
+                    <button class="filter-tab" role="tab" aria-selected="false" tabindex="-1">Tamil</button>
+                    <button class="filter-tab" role="tab" aria-selected="false" tabindex="-1">Telugu</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Movies Grid Container -->
+        <div class="container">
+            <div class="section-header">
+                <h2>Recommended Movies</h2>
+                <div class="view-options" role="group" aria-label="View layout options">
+                    <button class="view-btn active" title="Grid view" aria-label="Switch to grid view" aria-pressed="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </button>
+                    <button class="view-btn" title="List view" aria-label="Switch to list view" aria-pressed="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <line x1="8" y1="6" x2="21" y2="6"/>
+                            <line x1="8" y1="12" x2="21" y2="12"/>
+                            <line x1="8" y1="18" x2="21" y2="18"/>
+                            <line x1="3" y1="6" x2="3.01" y2="6"/>
+                            <line x1="3" y1="12" x2="3.01" y2="12"/>
+                            <line x1="3" y1="18" x2="3.01" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movies Grid -->
+            <div class="movies-grid" id="movies-grid" role="region" aria-label="Available movies">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Theater Selection Screen -->
+    <section id="theater-screen" class="screen">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb navigation">
+            <div class="container">
+                <button class="breadcrumb-btn" onclick="showScreen('movie-screen')" aria-label="Go back to movies">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Movies
+                </button>
+                <span class="breadcrumb-separator" aria-hidden="true">/</span>
+                <span id="breadcrumb-movie" class="breadcrumb-current" aria-current="page"></span>
+            </div>
+        </nav>
+
+        <!-- Theater Content -->
+        <div class="container">
+            <!-- Movie Header -->
+            <header class="movie-header">
+                <img id="selected-movie-poster" src="" alt="" class="movie-header-poster">
+                <article class="movie-header-info">
+                    <h1 id="selected-movie-title" class="movie-header-title"></h1>
+                    <div class="movie-meta" role="region" aria-label="Movie information">
+                        <span class="rating-badge" id="movie-rating"></span>
+                        <span class="genre-list" id="movie-genres"></span>
+                        <span class="duration" id="movie-duration"></span>
+                    </div>
+                    <p id="selected-movie-description" class="movie-description"></p>
+                </article>
+            </header>
+
+            <!-- Date Selector -->
+            <section class="date-selector">
+                <h2>Select Date</h2>
+                <div class="date-tabs" role="tablist" aria-label="Showtimes date">
+                    <button class="date-tab active" role="tab" aria-selected="true">
+                        <span class="date-day">Today</span>
+                        <span class="date-num">15 JAN</span>
+                    </button>
+                    <button class="date-tab" role="tab" aria-selected="false">
+                        <span class="date-day">Tomorrow</span>
+                        <span class="date-num">16 JAN</span>
+                    </button>
+                    <button class="date-tab" role="tab" aria-selected="false">
+                        <span class="date-day">Wed</span>
+                        <span class="date-num">17 JAN</span>
+                    </button>
+                    <button class="date-tab" role="tab" aria-selected="false">
+                        <span class="date-day">Thu</span>
+                        <span class="date-num">18 JAN</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Theaters Section -->
+            <section class="theaters-section">
+                <div class="section-title">
+                    <h2>Cinemas in <span id="theaters-city">Mumbai</span></h2>
+                    <div class="filters">
+                        <button class="filter-btn" title="Filter theaters" aria-label="Filter theater options">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"/>
+                            </svg>
+                            Filter
+                        </button>
+                    </div>
+                </div>
+                <div id="theaters-list" class="theaters-list" role="region" aria-label="Available theaters">
+                    <!-- Dynamically populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </section>
+
+
+    <!-- Seat Selection Screen -->
+    <section id="seat-screen" class="screen">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb navigation">
+            <div class="container">
+                <button class="breadcrumb-btn" onclick="showScreen('theater-screen')" aria-label="Go back to theaters">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Theaters
+                </button>
+                <span class="breadcrumb-separator" aria-hidden="true">/</span>
+                <span class="breadcrumb-current" aria-current="page">Select Seats</span>
+            </div>
+        </nav>
+
+        <!-- Seat Content -->
+        <div class="container">
+            <!-- Seat Selection Header -->
+            <header class="seat-selection-header">
+                <article class="show-info">
+                    <h1 id="seat-movie-title"></h1>
+                    <div class="show-details" role="region" aria-label="Showtime details">
+                        <span id="seat-theater-name"></span>
+                        <span class="separator" aria-hidden="true">|</span>
+                        <span id="seat-showtime"></span>
+                        <span class="separator" aria-hidden="true">|</span>
+                        <span>Today, 15 Jan 2025</span>
+                    </div>
+                </article>
+                <aside class="timer" aria-live="polite" aria-label="Booking timeout timer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    <span id="timer-display">09:45</span>
+                </aside>
+            </header>
+
+            <!-- Seat Layout -->
+            <section class="seat-layout">
+                <div class="seat-map-container">
+                    <!-- Screen Indicator -->
+                    <div class="screen-section">
+                        <div class="screen-indicator">
+                            <div class="screen-line"></div>
+                            <span>All eyes this way please!</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Seat Map -->
+                    <div id="seat-map" class="seat-map" role="region" aria-label="Seat selection map">
+                        <!-- Dynamically populated by JavaScript -->
+                    </div>
+
+                    <!-- Seat Legend -->
+                    <div class="seat-legend" role="region" aria-label="Seat legend">
+                        <div class="legend-group">
+                            <div class="legend-item">
+                                <div class="seat-sample available" title="Available seat"></div>
+                                <span>Available</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="seat-sample selected" title="Your selected seat"></div>
+                                <span>Selected</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="seat-sample sold" title="Already sold seat"></div>
+                                <span>Sold</span>
+                            </div>
+                        </div>
+                        <div class="legend-group">
+                            <div class="legend-item">
+                                <div class="seat-sample premium" title="Premium seat"></div>
+                                <span>₹ 200.00 Premium</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="seat-sample executive" title="Executive seat"></div>
+                                <span>₹ 160.00 Executive</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="seat-sample normal" title="Normal seat"></div>
+                                <span>₹ 120.00 Normal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Sidebar -->
+                <aside class="booking-sidebar" aria-label="Booking summary">
+                    <div class="booking-summary">
+                        <h2>Booking Summary</h2>
+                        <div class="selected-seats-info">
+                            <div class="seats-count">
+                                <span id="selected-count">0</span> Seats Selected
+                            </div>
+                            <div id="selected-seats-list" class="seats-list" aria-live="polite" aria-label="Selected seats"></div>
+                        </div>
+                        <div class="price-breakdown">
+                            <div class="price-item">
+                                <span>Tickets</span>
+                                <span id="tickets-price">₹ 0.00</span>
+                            </div>
+                            <div class="price-item">
+                                <span>Convenience fees</span>
+                                <span id="convenience-fee">₹ 0.00</span>
+                            </div>
+                            <div class="price-total">
+                                <span>Sub total</span>
+                                <span id="total-price">₹ 0.00</span>
+                            </div>
+                        </div>
+                        <button id="proceed-btn" class="proceed-btn" onclick="showScreen('booking-screen')" disabled aria-label="Proceed to payment" aria-disabled="true">
+                            Proceed
+                        </button>
+                    </div>
+                </aside>
+            </section>
+        </div>
+    </section>
+
+
+    <!-- Booking & Payment Screen -->
+    <section id="booking-screen" class="screen">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb navigation">
+            <div class="container">
+                <button class="breadcrumb-btn" onclick="showScreen('seat-screen')" aria-label="Go back to seat selection">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Select Seats
+                </button>
+                <span class="breadcrumb-separator" aria-hidden="true">/</span>
+                <span class="breadcrumb-current" aria-current="page">Payment</span>
+            </div>
+        </nav>
+
+        <!-- Booking Content -->
+        <div class="container">
+            <div class="booking-layout">
+                <!-- Booking Form Section -->
+                <main class="booking-form-section">
+                    <!-- Contact Details Card -->
+                    <article class="form-card">
+                        <h2>Share your Contact Details</h2>
+                        <p class="form-subtitle">We will send booking confirmation details to this email ID and phone number.</p>
+                        
+                        <form id="booking-form" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email ID</label>
+                                    <input type="email" id="email" placeholder="Enter your email ID" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mobile">Mobile Number</label>
+                                    <input type="tel" id="mobile" placeholder="Enter your mobile number" required aria-required="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" id="fullname" placeholder="Enter your full name" required aria-required="true">
+                            </div>
+                        </form>
+                    </article>
+
+                    <!-- Payment Methods Card -->
+                    <article class="payment-card">
+                        <h3>Payment Options</h3>
+                        <fieldset class="payment-methods" aria-label="Select payment method">
+                            <div class="payment-method active">
+                                <input type="radio" id="upi" name="payment" value="upi" checked aria-label="UPI Payment">
+                                <label for="upi">
+                                    <div class="payment-icon" aria-hidden="true">💳</div>
+                                    <span>UPI</span>
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="card" name="payment" value="card" aria-label="Credit/Debit Card Payment">
+                                <label for="card">
+                                    <div class="payment-icon" aria-hidden="true">💳</div>
+                                    <span>Credit/Debit Card</span>
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="netbanking" name="payment" value="netbanking" aria-label="Net Banking Payment">
+                                <label for="netbanking">
+                                    <div class="payment-icon" aria-hidden="true">🏦</div>
+                                    <span>Net Banking</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                        <div class="payment-note">
+                            <p>By proceeding, I express my consent to complete this transaction.</p>
+                        </div>
+                    </article>
+                </main>
+
+                <!-- Order Summary Sidebar -->
+                <aside class="order-summary" aria-label="Order summary">
+                    <article class="summary-card">
+                        <h2>Order Summary</h2>
+                        <div class="movie-summary">
+                            <img id="summary-poster" src="" alt="" class="summary-movie-poster">
+                            <div class="summary-movie-info">
+                                <h3 id="summary-movie-title"></h3>
+                                <p id="summary-movie-details"></p>
+                            </div>
+                        </div>
+                        
+                        <section class="booking-details" aria-label="Booking information">
+                            <div class="detail-row">
+                                <span>Cinema</span>
+                                <span id="summary-cinema"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Date & Time</span>
+                                <span id="summary-datetime"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Seats</span>
+                                <span id="summary-seats"></span>
+                            </div>
+                        </section>
+
+                        <section class="price-summary" aria-label="Price breakdown">
+                            <div class="price-row">
+                                <span>Tickets</span>
+                                <span id="summary-tickets-price"></span>
+                            </div>
+                            <div class="price-row">
+                                <span>Convenience fees</span>
+                                <span id="summary-convenience-fee"></span>
+                            </div>
+                            <div class="price-total-row">
+                                <span>Amount Payable</span>
+                                <span id="summary-total-price"></span>
+                            </div>
+                        </section>
+
+                        <button type="submit" form="booking-form" id="pay-btn" class="pay-btn" aria-label="Complete payment">
+                            Make Payment
+                        </button>
+                    </article>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Confirmation Screen -->
+    <section id="confirmation-screen" class="screen">
+        <div class="container">
+            <div class="confirmation-container">
+                <!-- Success Animation -->
+                <article class="success-animation" role="status" aria-live="polite">
+                    <div class="success-checkmark">
+                        <svg viewBox="0 0 52 52" aria-hidden="true">
+                            <circle cx="26" cy="26" r="25" fill="none"/>
+                            <path fill="none" d="m14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                    <h1>Booking Confirmed!</h1>
+                    <p>Your tickets have been booked successfully</p>
+                </article>
+
+                <!-- Ticket Card -->
+                <article class="ticket-card" role="region" aria-label="Booking confirmation ticket">
+                    <div class="ticket-header">
+                        <div class="ticket-movie-info">
+                            <h2 id="ticket-movie-title"></h2>
+                            <p id="ticket-movie-meta"></p>
+                        </div>
+                        <aside class="booking-id">
+                            <span>Booking ID</span>
+                            <strong id="ticket-booking-id"></strong>
+                        </aside>
+                    </div>
+                    
+                    <!-- Ticket Details -->
+                    <section class="ticket-details" role="region" aria-label="Ticket details">
+                        <div class="ticket-section">
+                            <h3>Cinema</h3>
+                            <p id="ticket-cinema"></p>
+                        </div>
+                        <div class="ticket-section">
+                            <h3>Date & Time</h3>
+                            <p id="ticket-datetime"></p>
+                        </div>
+                        <div class="ticket-section">
+                            <h3>Seats</h3>
+                            <p id="ticket-seats"></p>
+                        </div>
+                        <div class="ticket-section">
+                            <h3>Total Amount</h3>
+                            <p id="ticket-amount" class="amount"></p>
+                        </div>
+                    </section>
+
+                    <!-- Ticket Actions -->
+                    <div class="ticket-actions">
+                        <button class="download-btn" title="Download your ticket" aria-label="Download ticket as PDF">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Download Ticket
+                        </button>
+                        <button class="share-btn" title="Share your ticket" aria-label="Share ticket with others">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                            Share
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Confirmation Actions -->
+                <nav class="confirmation-actions" aria-label="Post-booking options">
+                    <button class="new-booking-btn" onclick="startNewBooking()" aria-label="Book more tickets">
+                        Book More Tickets
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
